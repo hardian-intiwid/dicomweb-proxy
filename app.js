@@ -72,10 +72,18 @@ app.get(
     const tags = ["00080016", "00080018"];
 
     const { query } = req;
-    query.StudyInstanceUID = req.params.studyInstanceUid;
-    query.SeriesInstanceUID = req.params.seriesInstanceUid;
+    query.StudyInstanceUID = studyInstanceUid;
+    query.SeriesInstanceUID = seriesInstanceUid;
 
     const json = await utils.doFind("IMAGE", query, tags);
+
+    for (let i = 0; i < json.length; i+=1) {
+      json[i]["00080060"] = { Value: ["MG"], vr: "CS" };
+    }
+
+    res.json(json);
+/*
+
     // fetch series but wait for first image only
     await utils.waitOrFetchData(
       studyInstanceUid,
@@ -142,7 +150,8 @@ app.get(
       }
       res.json(json);
     });
-  }
+  */
+}
 );
 
 //------------------------------------------------------------------
